@@ -12,45 +12,32 @@ jobs:
   pool:
     vmImage: 'macOS-10.14'
   steps:
-  # - task: SonarQubePrepare@4
-  #   inputs:
-  #     SonarQube: 'Peach'
-  #     scannerMode: 'CLI'
-  #     configMode: 'manual'
-  #     cliProjectKey: 'geoffray-hello-world-xcode'
-  #     cliProjectName: 'geoffray-hello-world-xcode'
-  #     extraProperties: 'sonar.cfamily.build-wrapper-output=build_wrapper_output_directory_mac'
-  #     cliSources: '.'
-  # - bash: |
-  #     curl 'https://peach.sonarsource.com/static/cpp/build-wrapper-macosx-x86.zip' --output build-wrapper-macosx-x86.zip
-  #     unzip build-wrapper-macosx-x86.zip
-  #   displayName: Install buildwrapper
-  # - bash: |
-  #     set -euo pipefail
-  #     cd $(Agent.TempDirectory)
-  #     wget -q "https://github.com/Kitware/CMake/releases/download/v3.15.6/cmake-3.15.6-Darwin-x86_64.tar.gz"
-  #     tar zxf cmake-3.15.6-Darwin-x86_64.tar.gz
-  #     mv cmake-3.15.6-Darwin-x86_64 cmake
-  #     cd $(Build.SourcesDirectory)
-  #     mkdir build_mac
-  #   displayName: Install CMake 3.15
-  # - bash: |
-  #     $(Agent.TempDirectory)/cmake/CMake.app/Contents/bin/cmake --version
-  #     $(Agent.TempDirectory)/cmake/CMake.app/Contents/bin/cmake -S .. -B .
-  #   workingDirectory: build_mac
-  #   displayName: Build project files
-  # - bash: |
-  #     build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir build_wrapper_output_directory_mac $(Agent.TempDirectory)/cmake/CMake.app/Contents/bin/cmake --build build_mac/ --config Release
-  #   displayName: Compile project in build wrapper
-  # - bash: |
-  #     ls -larth build_wrapper_output_directory_mac
-  #     cat build_wrapper_output_directory_mac/build-wrapper-dump.json
-  #     echo '======== end of json dump ========'
-  #     cat build_wrapper_output_directory_mac/build-wrapper.*
-  #     echo '======== end of log dump ========'
-  # - task: SonarQubeAnalyze@4
+  - task: SonarQubePrepare@4
+    inputs:
+      SonarQube: 'Peach'
+      scannerMode: 'CLI'
+      configMode: 'manual'
+      cliProjectKey: 'geoffray-hello-world-xcode'
+      cliProjectName: 'geoffray-hello-world-xcode'
+      extraProperties: 'sonar.cfamily.build-wrapper-output=build_wrapper_output_directory_mac'
+      cliSources: '.'
   - bash: |
-      /usr/bin/xcodebuild -configuration Release -workspace hello-world-xcode.xcodeproj/project.xcworkspace -scheme hello-world-xcode build CODE_SIGNING_ALLOWED=NO
+      curl 'https://peach.sonarsource.com/static/cpp/build-wrapper-macosx-x86.zip' --output build-wrapper-macosx-x86.zip
+      unzip build-wrapper-macosx-x86.zip
+    displayName: Install buildwrapper
+  - bash: |
+      build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir build_wrapper_output_directory_mac /usr/bin/xcodebuild -configuration Release -workspace hello-world-xcode.xcodeproj/project.xcworkspace -scheme hello-world-xcode build CODE_SIGNING_ALLOWED=NO
+    displayName: Compile project in build wrapper
+  - bash: |
+      ls -larth build_wrapper_output_directory_mac
+      cat build_wrapper_output_directory_mac/build-wrapper-dump.json
+      echo '======== end of json dump ========'
+      cat build_wrapper_output_directory_mac/build-wrapper.*
+      echo '======== end of log dump ========'
+  - task: SonarQubeAnalyze@4
+  
+#   - bash: |
+#       /usr/bin/xcodebuild -configuration Release -workspace hello-world-xcode.xcodeproj/project.xcworkspace -scheme hello-world-xcode build CODE_SIGNING_ALLOWED=NO
   # - task: Xcode@5
   #   inputs:
   #     actions: 'build'
