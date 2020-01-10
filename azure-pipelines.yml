@@ -53,4 +53,5 @@ jobs:
     inputs:
       actions: 'build'
       configuration: 'Release'
+      sdk: 
       packageApp: false
