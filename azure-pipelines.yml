@@ -26,7 +26,7 @@ jobs:
       unzip build-wrapper-macosx-x86.zip
     displayName: Install buildwrapper
   - bash: |
-      build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir build_wrapper_output_directory_mac /usr/bin/xcodebuild -configuration Release -workspace hello-world-xcode.xcodeproj/project.xcworkspace -scheme hello-world-xcode build CODE_SIGNING_ALLOWED=NO
+      build-wrapper-macosx-x86/build-wrapper-macosx-x86 --out-dir build_wrapper_output_directory_mac /usr/bin/xcodebuild -configuration Release -workspace hello-world-xcode.xcodeproj/project.xcworkspace -scheme hello-world-xcode clean build CODE_SIGNING_ALLOWED=NO
     displayName: Compile project in build wrapper
   - bash: |
       ls -larth build_wrapper_output_directory_mac
